@@ -222,21 +222,22 @@ class DPMonitor {
     }
 
     synchronized void simulate(String msg, int ms, JLabel comments) {
-        Boolean thinking = msg.contains("thinking"); // Cyan
+        Boolean thinking = msg.contains("thinking");// Cyan
         Boolean hungry = msg.contains("hungry");    // Red
         Boolean eating = msg.contains("eating");    // Green
         Boolean relaxing = msg.contains("relaxing");// Blue
         Boolean get = msg.contains("get");          // Pink
         Boolean put = msg.contains("put");          // Magenta
 
+        if      (hungry)    comments.setForeground(Color.RED);
+        else if (thinking)  comments.setForeground(Color.CYAN);
+        else if (eating)    comments.setForeground(Color.GREEN);
+        else if (relaxing)  comments.setForeground(Color.BLUE);
+        else if (get)       comments.setForeground(Color.MAGENTA);
+        else if (put)       comments.setForeground(Color.PINK);
+        else                comments.setForeground(Color.BLACK);
+
         try {
-            if(hungry) comments.setForeground(Color.RED);
-            else if (thinking) comments.setForeground(Color.CYAN);
-            else if (eating) comments.setForeground(Color.GREEN);
-            else if(relaxing) comments.setForeground(Color.BLUE);
-            else if(get) comments.setForeground(Color.MAGENTA);
-            else if(put) comments.setForeground(Color.PINK);
-            else comments.setForeground(Color.BLACK);
             comments.setText(msg);
             Thread.sleep(rnd.nextInt(ms) + 500);
         } catch (Exception e) {
