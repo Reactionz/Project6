@@ -12,7 +12,6 @@ public class DiningPhilosophers extends JFrame {
     static DPMonitor dpMtr = new DPMonitor();
     static JLabel[] comments = new JLabel[5];
     static DiningPhilosophers window;
-    private static boolean exit = false;
 
     public DiningPhilosophers() {
         initialize();
@@ -51,7 +50,7 @@ public class DiningPhilosophers extends JFrame {
         ImageIcon forkLeft = createImageIcon("images/forkLeft.jpg");
         ImageIcon forkRight = createImageIcon("images/forkRight.jpg");
         ImageIcon table = new ImageIcon(
-                new ImageIcon("images/table.jpg").getImage().getScaledInstance(240, 240, Image.SCALE_DEFAULT)
+                new ImageIcon("images/table.png").getImage().getScaledInstance(240, 240, Image.SCALE_DEFAULT)
         );
 
         // Setting Window Size and Background Color
@@ -110,7 +109,7 @@ public class DiningPhilosophers extends JFrame {
         frame.getContentPane().add(philoLabel5);
 
         JLabel tableLabel = new JLabel(table);
-        tableLabel.setBounds(250, 125, 240, 240);
+        tableLabel.setBounds(240, 150, 240, 240);
         frame.getContentPane().add(tableLabel);
 
         frame.setLayout(null);
@@ -189,8 +188,6 @@ class Philosopher implements Runnable {
 }
 
 class DPMonitor {
-    // static int[] xUten = { 9, 14, 19, 13, 8 };
-    // static int[] yUten = { 50, 50, 43, 35, 35 };
     int[] tableware = { 0, 1, 2, 3, 4 }; // silverware, utensils, cuetery
     static Random rnd = new Random();
     static JLabel comments;
@@ -225,7 +222,21 @@ class DPMonitor {
     }
 
     synchronized void simulate(String msg, int ms, JLabel comments) {
+        Boolean thinking = msg.contains("thinking"); // Cyan
+        Boolean hungry = msg.contains("hungry");    // Red
+        Boolean eating = msg.contains("eating");    // Green
+        Boolean relaxing = msg.contains("relaxing");// Blue
+        Boolean get = msg.contains("get");          // Pink
+        Boolean put = msg.contains("put");          // Magenta
+
         try {
+            if(hungry) comments.setForeground(Color.RED);
+            else if (thinking) comments.setForeground(Color.CYAN);
+            else if (eating) comments.setForeground(Color.GREEN);
+            else if(relaxing) comments.setForeground(Color.BLUE);
+            else if(get) comments.setForeground(Color.MAGENTA);
+            else if(put) comments.setForeground(Color.PINK);
+            else comments.setForeground(Color.BLACK);
             comments.setText(msg);
             Thread.sleep(rnd.nextInt(ms) + 500);
         } catch (Exception e) {
