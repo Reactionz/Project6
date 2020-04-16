@@ -27,7 +27,7 @@ public class DiningPhilosophers extends JFrame {
     
     // Return scaled ImageIcon to getContentPane().add to JLabel
     protected static ImageIcon createImageIcon(String path) {
-        URL imgURL = DinningPhilosophers.class.getResource(path);
+        URL imgURL = DiningPhilosophers.class.getResource(path);
 
         if (imgURL != null) {
             return new ImageIcon(new ImageIcon(imgURL).getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT));
