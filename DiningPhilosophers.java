@@ -6,18 +6,28 @@ import java.awt.Button;
 import java.awt.*;
 import java.net.URL;
 import java.util.Random;
-import java.io.FileInputStream;
-import javax.swing.SwingConstants;
-import javax.swing.SwingContainer;
 
-public class DinningPhilosophers extends JFrame {
-
+public class DiningPhilosophers extends JFrame {
+    private static JFrame frame;
     static DPMonitor dpMtr = new DPMonitor();
-    static JLabel[] philoLabels = new JLabel[5];
     static JLabel[] comments = new JLabel[5];
+    static DiningPhilosophers window;
+    private static boolean exit = false;
 
+    public DiningPhilosophers() {
+        initialize();
+    } 
+    public static void main(String[] args) {
+        try {
+            window = new DiningPhilosophers();
+            window.frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     // Return scaled ImageIcon to getContentPane().add to JLabel
-    static protected ImageIcon createImageIcon(String path) {
+    protected static ImageIcon createImageIcon(String path) {
         URL imgURL = DinningPhilosophers.class.getResource(path);
 
         if (imgURL != null) {
@@ -28,13 +38,16 @@ public class DinningPhilosophers extends JFrame {
         }
     }
 
-    public static void initialize() {
-        JFrame frame = new JFrame("Dining Philosophers");
+    private static void initialize() {
+        frame = new JFrame("Dining Philosophers");
         ImageIcon philo1 = createImageIcon("./images/philo1.jpeg");
         ImageIcon philo2 = createImageIcon("images/philo2.jpg");
         ImageIcon philo3 = createImageIcon("images/philo3.jpg");
         ImageIcon philo4 = createImageIcon("images/philo4.jpg");
         ImageIcon philo5 = createImageIcon("images/philo5.jpg");
+
+        // TODO: Add Forks next to the philosophers and maybe like food on plates.
+
         ImageIcon forkLeft = createImageIcon("images/forkLeft.jpg");
         ImageIcon forkRight = createImageIcon("images/forkRight.jpg");
         ImageIcon table = new ImageIcon(
@@ -45,58 +58,56 @@ public class DinningPhilosophers extends JFrame {
         frame.setSize(720, 600);
         frame.setBackground(Color.WHITE);
 
-        // Add the Start and Stop Buttons
+        // Add the Start and exit Buttons
         Button start = new Button("Start");
         start.setBounds(325, 450, 77, 22);
         start.addActionListener(e -> start()); // Lambda Expression to getContentPane().add event listener to button
         frame.getContentPane().add(start);
         
-        Button stop = new Button("Stop");
-        stop.setBounds(325, 500, 77, 22);
-        stop.addActionListener(e -> System.exit(0));
-        frame.getContentPane().add(stop);
+        Button exit = new Button("Exit");
+        exit.setBounds(325, 500, 77, 22);
+        exit.addActionListener(e -> System.exit(0));
+        frame.getContentPane().add(exit);
 
         // Initialize all JLabels with ImageIcons or Text Labels to Change
         // Setting placement or all the photos.
 
         JLabel philoLabel1 = new JLabel(philo1);
-        JLabel philoTextLabel0 = new JLabel("Philosopher 1");
+        JLabel philoTextLabel0 = new JLabel("Philosopher 0");
         philoLabel1.setBounds(150, 150, 80, 80);
-        philoTextLabel0.setBounds(135, 135, 150, 15);
+        philoTextLabel0.setBounds(135, 135, 200, 15);
         frame.getContentPane().add(philoTextLabel0);
         frame.getContentPane().add(philoLabel1);
 
-
-        JLabel philoLabel2 = new JLabel(philo2);
-        JLabel philoTextLabel1 = new JLabel("Philosopher 2");
-        philoLabel2.setBounds(500, 150, 80, 80);
-        philoTextLabel1.setBounds(485, 135, 150, 15);
+        JLabel philoLabel2 = new JLabel(philo3);
+        JLabel philoTextLabel1 = new JLabel("Philosopher 1");
+        philoLabel2.setBounds(315, 50, 80, 80);
+        philoTextLabel1.setBounds(300, 35, 200, 15);
         frame.getContentPane().add(philoTextLabel1);
         frame.getContentPane().add(philoLabel2);
 
-        JLabel philoLabel3 = new JLabel(philo3);
-        JLabel philoTextLabel2 = new JLabel("Philosopher 3");
-        philoLabel3.setBounds(315, 50, 80, 80);
-        philoTextLabel2.setBounds(300, 35, 150, 15);
+        JLabel philoLabel3 = new JLabel(philo2);
+        JLabel philoTextLabel2 = new JLabel("Philosopher 2");
+        philoLabel3.setBounds(500, 150, 80, 80);
+        philoTextLabel2.setBounds(485, 135, 200, 15);
         frame.getContentPane().add(philoTextLabel2);
         frame.getContentPane().add(philoLabel3);
 
 
-        JLabel philoLabel4 = new JLabel(philo4);
-        JLabel philoTextLabel3 = new JLabel("Philosopher 4");
-        philoLabel4.setBounds(150, 350, 80, 80);
-        philoTextLabel3.setBounds(135, 335, 150, 15);
+        JLabel philoLabel4 = new JLabel(philo5);
+        JLabel philoTextLabel3 = new JLabel("Philosopher 3");
+        philoLabel4.setBounds(500, 350, 80, 80);
+        philoTextLabel3.setBounds(485, 335, 200, 15);
         frame.getContentPane().add(philoTextLabel3);
         frame.getContentPane().add(philoLabel4);
 
 
-        JLabel philoLabel5 = new JLabel(philo5);
-        JLabel philoTextLabel4 = new JLabel("Philosopher 5");
-        philoLabel5.setBounds(500, 350, 80, 80);
-        philoTextLabel4.setBounds(485, 335, 150, 15);
+        JLabel philoLabel5 = new JLabel(philo4);
+        JLabel philoTextLabel4 = new JLabel("Philosopher 4");
+        philoLabel5.setBounds(150, 350, 80, 80);
+        philoTextLabel4.setBounds(135, 335, 200, 15);
         frame.getContentPane().add(philoTextLabel4);
         frame.getContentPane().add(philoLabel5);
-
 
         JLabel tableLabel = new JLabel(table);
         tableLabel.setBounds(250, 125, 240, 240);
@@ -106,7 +117,6 @@ public class DinningPhilosophers extends JFrame {
 
         // Display the Window
         frame.setLocationByPlatform(true);
-        frame.setVisible(true);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -122,18 +132,11 @@ public class DinningPhilosophers extends JFrame {
             new Thread(new Philosopher(i, dpMtr, comments[i])).start();
         }
     }
-        public static void main(String[] args) {
-        try {
-            initialize();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 }
 
 class Philosopher implements Runnable {
-    static int[] x = { 6, 12, 17, 15, 10 };
-    static int[] y = { 35, 55, 55, 15, 15 };
+
     int k; // ID Of a philosopher.
     int left, right;
     DPMonitor mtr = null;
@@ -145,6 +148,7 @@ class Philosopher implements Runnable {
         this.mtr = mtr;
         this.comments = comments;
         name = String.format("Philosopher-%d: ", k);
+
         switch (k) {
             case 0:
                 left = 0;
@@ -172,40 +176,31 @@ class Philosopher implements Runnable {
     }
 
     public void run() {
-
         while (true) {
-            // MyUtil.clear();
-            // mtr.printTablewares();
-            mtr.simulate(x[k], y[k], String.format("%s thinking", name), 4000, comments);
-            mtr.simulate(x[k], y[k], String.format("%s hungry.", name), 800, comments);
-            mtr.pick(right, left, name, x[k], y[k], comments);
-            mtr.simulate(x[k], y[k], String.format("%s [%d] eating [%d]", name, right, left), 3000, comments);
-            mtr.put(right, left, name, x[k], y[k], comments);
-            mtr.simulate(x[k], y[k], String.format("%s relaxing", name), 2000, comments);
+            mtr.simulate(String.format("%s thinking", name), 4000, comments);
+            mtr.simulate(String.format("%s hungry.", name), 800, comments);
+            mtr.pick(right, left, name, comments);
+            mtr.simulate(String.format("%s [%d] eating [%d]", name, right, left), 3000, comments);
+            mtr.put(right, left, name, comments);
+            mtr.simulate(String.format("%s relaxing", name), 2000, comments);
         }
     }
 
 }
 
 class DPMonitor {
-    static int[] xUten = { 9, 14, 19, 13, 8 };
-    static int[] yUten = { 50, 50, 43, 35, 35 };
+    // static int[] xUten = { 9, 14, 19, 13, 8 };
+    // static int[] yUten = { 50, 50, 43, 35, 35 };
     int[] tableware = { 0, 1, 2, 3, 4 }; // silverware, utensils, cuetery
     static Random rnd = new Random();
     static JLabel comments;
-    public DPMonitor() {
-        for (int i = 0; i < tableware.length; i++) {
-            moveTo(xUten[i], yUten[i]);
-            System.out.printf("%d", i);
-        }
-    }
 
     // A philosopher will look at is left and writh tableware, if both avaible.
     // pick. I any one tableware is not avaialble (-1), he will wait.
-    public synchronized void pick(int right, int left, String name, int x, int y, JLabel comments) {
-        int tu[] = { right, left };
+
+    public synchronized void pick(int right, int left, String name,JLabel comments) {
         while (tableware[right] == -1 || tableware[left] == -1) { // need both utensils to each
-            simulate(x, y, String.format("%s waiting [%d,%d]", name, tableware[right], tableware[left]), 1000, comments);
+            simulate(String.format("%s waiting [%d,%d]", name, tableware[right], tableware[left]), 1000, comments);
             notifyAll();
             try {
                 wait();
@@ -213,46 +208,25 @@ class DPMonitor {
                 e.printStackTrace();
             }
         }
-        moveTo(xUten[right], yUten[right]);
-        System.out.printf("%d", -1);
-        moveTo(xUten[left], yUten[left]);
-        System.out.printf("%d", -1);
-        simulate(x, y, String.format("%s get [%s,%d]", name, tableware[right], tableware[left]), 500, comments);
+
+        simulate(String.format("%s get [%s,%d]", name, tableware[right], tableware[left]), 500, comments);
         tableware[right] = -1;
         tableware[left] = -1;
-        // printTablewares();
     }
 
     // put() needs no mutual exclusived since no one utensil will be put back by
     // more than one philosophy at the same locaion.
 
-    public synchronized void put(int right, int left, String name, int x, int y, JLabel comments) {
-        moveTo(xUten[right], yUten[right]);
-        System.out.printf("%2d", right);
-        moveTo(xUten[left], yUten[left]);
-        System.out.printf("%2d", left);
+    public synchronized void put(int right, int left, String name, JLabel comments) {
         tableware[right] = right;
         tableware[left] = left;
-        simulate(x, y, String.format("%s [%d] put [%d]", name, right, left), 500, comments);
+        simulate(String.format("%s [%d] put [%d]", name, right, left), 500, comments);
         notifyAll();
     }
 
-    // synchronized public void printTablewares() {
-    // moveTo(24, 20);
-    // for (int i = 0; i < tableware.length; i++)
-    // System.out.printf("|%7d |", tableware[i]);
-    // }
-
-    synchronized void moveTo(int x, int y) {
-        System.out.printf("%s", (char) (27) + "[" + x + ";" + y + "H");
-    }
-
-    synchronized void simulate(int x, int y, String msg, int ms, JLabel comments) {
-        comments.setText(msg);
-        moveTo(x, y);
-        MyUtil.eraseLine();
-        System.out.printf("%s", msg);
+    synchronized void simulate(String msg, int ms, JLabel comments) {
         try {
+            comments.setText(msg);
             Thread.sleep(rnd.nextInt(ms) + 500);
         } catch (Exception e) {
             e.printStackTrace();
